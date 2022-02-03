@@ -14,6 +14,7 @@
 */
 
 use App\Models\User;
+use App\Http\Controllers\UserController;
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -21,14 +22,7 @@ $router->get('/', function () use ($router) {
 
 
 
-$router->get("get-all-users", function() {
-    if(User::all()->count() == 0) {
-        return "List is empty";
-    }
-    else {
-        return User::all();
-    }
-});
+$router->get("get-all-users", "UserController@getAllUsers");
 
 $router->post("add-user", function() {
 });
