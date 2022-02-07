@@ -25,10 +25,45 @@ $router->get('/', function () use ($router) {
 $router->get("get-all-users", "UserController@getAllUsers");
 
 $router->post("add-user", function() {
+
 });
 
 $router->get("var_dump", function () {
     var_dump(12345, "dafdf", "efwae");
 });
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->get('roles',  ['uses' => 'RoleController@showAllroles']);
+
+    $router->get('roles/{id}', ['uses' => 'RoleController@showOneRole']);
+
+    $router->post('roles', ['uses' => 'RoleController@create']);
+
+    $router->delete('roles/{id}', ['uses' => 'RoleController@delete']);
+
+    $router->put('roles/{id}', ['uses' => 'RoleController@update']);
+
+    $router->get('users',  ['uses' => 'UserController@showAllusers']);
+
+    $router->get('users/{id}', ['uses' => 'UserController@showOneUser']);
+
+    $router->post('users', ['uses' => 'UserController@create']);
+
+    $router->delete('users/{id}', ['uses' => 'UserController@delete']);
+
+    $router->put('users/{id}', ['uses' => 'UserController@update']);
+
+
+    $router->get('tokens',  ['uses' => 'TokenController@showAlltokens']);
+
+    $router->get('tokens/{id}', ['uses' => 'TokenController@showOneToken']);
+
+    $router->post('tokens', ['uses' => 'TokenController@create']);
+
+    $router->delete('tokens/{id}', ['uses' => 'TokenController@delete']);
+
+    $router->put('tokens/{id}', ['uses' => 'TokenController@update']);
+});
+
 
 

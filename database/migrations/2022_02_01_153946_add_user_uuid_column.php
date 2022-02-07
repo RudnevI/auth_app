@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class AddUserUuidColumn extends Migration
 {
@@ -14,7 +15,7 @@ class AddUserUuidColumn extends Migration
     public function up()
     {
         Schema::table("users", function (Blueprint $table) {
-            $table->uuid("user_uuid");
+            $table->uuid("user_uuid")->index()->nullable();
         });
     }
 

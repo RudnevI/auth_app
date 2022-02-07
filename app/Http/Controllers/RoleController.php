@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\User;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class RoleController extends Controller
 {
-    public function showAllUsers(): \Illuminate\Http\JsonResponse
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showAllRoles(): \Illuminate\Http\JsonResponse
     {
-        return response()->json(User::with("role")->get());
+        return response()->json(Role::all());
     }
 
     /**
@@ -23,8 +27,8 @@ class UserController extends Controller
     public function create(Request $request): \Illuminate\Http\JsonResponse
     {
 
-        $user = User::create($request->all());
-        return response()->json($user, 201);
+        $role = Role::create($request->all());
+        return response()->json($role, 201);
     }
 
     /**
@@ -41,10 +45,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\User $user
+     * @param \App\Role $role
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Role $role)
     {
         //
     }
@@ -52,48 +56,41 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\User $user
+     * @param \App\Role $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(Role $role)
     {
         //
-    }
-
-    public function showOneUser($id): JsonResponse {
-
-        return response()->json(User::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\User $user
+     * @param \App\Role $role
      * @return \Illuminate\Http\JsonResponse
      */
     public function update($id, Request $request): \Illuminate\Http\JsonResponse
     {
-        $user = User::findOrFail($id);
-        $user->update($request->all());
+        $role = Role::findOrFail($id);
+        $role->update($request->all());
 
-        return response()->json($user, 200);
+        return response()->json($role, 200);
     }
 
+    public function showOneRole($id): JsonResponse {
+        return response()->json(Role::findOrFail($id));
+    }
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\User $user
+     * @param \App\Role $role
      * @return \Illuminate\Http\Response
      */
     public function delete($id): \Illuminate\Http\Response
     {
-        User::findOrFail($id)->delete();
+        Role::findOrFail($id)->delete();
         return response('Deleted Successfully', 200);
-    }
-
-    public function findByRoleName($roleId): \Illuminate\Http\JsonResponse
-    {
-        return response()->json(User::with("roles")->find($roleId));
     }
 }

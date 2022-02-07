@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    //
+    protected $fillable = ['name'];
+    public function getRouteKeyName()
+    {
+        return 'role_uuid';
+    }
 }
