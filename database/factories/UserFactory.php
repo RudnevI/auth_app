@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 class UserFactory extends Factory
 {
@@ -22,8 +24,11 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'username' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
+            'hashed_password' => Hash::make($this->faker->password(8, 128)),
+
+            'role_id' => Role::where('name', '=', 'user')->first()->id
         ];
     }
 }

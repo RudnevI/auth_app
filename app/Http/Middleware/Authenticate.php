@@ -3,42 +3,46 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Auth\Factory as Auth;
+use Exception;
+
 
 class Authenticate
 {
-    /**
-     * The authentication guard factory instance.
-     *
-     * @var \Illuminate\Contracts\Auth\Factory
-     */
-    protected $auth;
-
-    /**
-     * Create a new middleware instance.
-     *
-     * @param  \Illuminate\Contracts\Auth\Factory  $auth
-     * @return void
-     */
-    public function __construct(Auth $auth)
-    {
-        $this->auth = $auth;
-    }
-
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
-    {
-        if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
-        }
+    public function handle($request, Closure $next) {
+        $bearerToken = $request->bearerToken();
 
+        if(empty($bearerToken)) {
+
+            return response()->json(["Message"=>"Request is unauthorized: token is empty"], 403);
+        }
+        $explodedToken = [];
+        try {
+            $explodedToken = explode(".", $bearerToken);
+            if(count($explodedToken) < 3) {
+                throw new Exception();
+            }
+        }
+        catch(Exception $e) {
+
+            return response()->json(["Message"=>"Unsupported token format"], 400);
+        }
+        $signature = $explodedToken[2];
+        $header = $explodedToken[0];
+        $payload = $explodedToken[1];
+
+
+
+        if(!strcmp($signature, hash_hmac("sha256", $header .'.'. $payload, env("JWT_SECRET")))===0) {
+            return response()->json(["Message"=>"Token is not valid"], 400);
+        }
         return $next($request);
+
     }
 }

@@ -21,19 +21,20 @@ $router->get('/', function () use ($router) {
 });
 
 
-
 $router->get("get-all-users", "UserController@getAllUsers");
 
-$router->post("add-user", function() {
+$router->post("add-user", function () {
 
 });
 
 $router->get("var_dump", function () {
     var_dump(12345, "dafdf", "efwae");
+
+
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('roles',  ['uses' => 'RoleController@showAllroles']);
+    $router->get('roles', ['uses' => 'RoleController@showAllroles']);
 
     $router->get('roles/{id}', ['uses' => 'RoleController@showOneRole']);
 
@@ -43,7 +44,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->put('roles/{id}', ['uses' => 'RoleController@update']);
 
-    $router->get('users',  ['uses' => 'UserController@showAllusers']);
+    $router->get('users', ['uses' => 'UserController@showAllusers']);
 
     $router->get('users/{id}', ['uses' => 'UserController@showOneUser']);
 
@@ -53,8 +54,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->put('users/{id}', ['uses' => 'UserController@update']);
 
+    $router->get("generate-token", ['uses' => 'AuthController@generateToken']);
 
-    $router->get('tokens',  ['uses' => 'TokenController@showAlltokens']);
+
+    $router->get('tokens', ['uses' => 'TokenController@showAlltokens']);
 
     $router->get('tokens/{id}', ['uses' => 'TokenController@showOneToken']);
 
@@ -63,6 +66,17 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('tokens/{id}', ['uses' => 'TokenController@delete']);
 
     $router->put('tokens/{id}', ['uses' => 'TokenController@update']);
+
+    $router->post('sign-up', ['uses' => 'AuthController@signUp']);
+    $router->post('auth', ['uses' => 'AuthController@authenticate']);
+    $router->get('generate-token', ['uses' => 'AuthController@generateToken']);
+
+    $router->get('dig-for-treasure', ['uses' => 'TreasureController@dig']);
+    $router->get('test-middleware', ['uses' => 'AuthController@testMiddleware', "middleware" => "auth"]);
+    $router->get('go-on-adventure', ['middleware'=>'auth', 'uses' => 'TreasureController@goOnAdventure']);
+    $router->get('get-user-role-by-token', ['uses'=>'UserController@getUserRoleByToken']);
+    $router->get('get-admin-page', ['middleware'=>'admin_verification', 'uses'=>'AuthController@getAdminPage']);
+    $router->get('get-resource-requiring-authentication', ['middleware'=>'auth', 'uses'=>'AuthController@getResponseForAuthenticatedUsers']);
 });
 
 

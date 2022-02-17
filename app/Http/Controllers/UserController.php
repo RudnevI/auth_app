@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Token;
 use App\Models\User;
-
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,12 @@ class UserController extends Controller
 {
     public function showAllUsers(): \Illuminate\Http\JsonResponse
     {
+        try {
         return response()->json(User::with("role")->get());
+        }
+        catch(Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     /**
@@ -23,8 +29,13 @@ class UserController extends Controller
     public function create(Request $request): \Illuminate\Http\JsonResponse
     {
 
+        try {
         $user = User::create($request->all());
-        return response()->json($user, 201);
+        return response()->json(['Message' => 'CREATED', 'user' => $user], 201);
+        }
+        catch(Exception $e) {
+        dd($e->getMessage());
+        }
     }
 
     /**
@@ -62,7 +73,14 @@ class UserController extends Controller
 
     public function showOneUser($id): JsonResponse {
 
-        return response()->json(User::findOrFail($id));
+        try {
+            $user = User::findOrFail($id)->first();
+            return response()->json($user->toArray());
+        }
+        catch(Exception $e) {
+            return response()->json(["Message" => "User with this id is not found"], 404);
+        }
+
     }
 
     /**
@@ -95,5 +113,21 @@ class UserController extends Controller
     public function findByRoleName($roleId): \Illuminate\Http\JsonResponse
     {
         return response()->json(User::with("roles")->find($roleId));
+    }
+
+    public function getUserRoleByToken(Request $request) {
+        $bearerToken = $request->bearerToken();
+        try {
+            $userId = Token::where("access_token", '=', $bearerToken)->get()->firstOrFail()->user_id;
+            $user = User::findOrFail($userId);
+            dd($user->role_id);
+        }
+        catch(Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function getUserById($id) {
+
     }
 }

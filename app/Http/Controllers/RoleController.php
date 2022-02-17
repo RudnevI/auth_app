@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
-
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,12 @@ class RoleController extends Controller
      */
     public function showAllRoles(): \Illuminate\Http\JsonResponse
     {
-        return response()->json(Role::all());
+        try {
+            return response()->json(Role::all());
+        }
+        catch(Exception $exception) {
+            dd($exception->getMessage());
+        }
     }
 
     /**
@@ -28,7 +33,7 @@ class RoleController extends Controller
     {
 
         $role = Role::create($request->all());
-        return response()->json($role, 201);
+        return response()->json(['Message' => 'CREATED', 'role' => $role], 201);
     }
 
     /**

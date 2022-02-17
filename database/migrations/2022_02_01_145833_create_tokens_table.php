@@ -16,7 +16,8 @@ class CreateTokensTable extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->string("access_token");
-            $table->string("refresh_token");
+            $table->string("refresh_token")->nullable();
+            $table->dateTime("expiration_date");
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->onUpdate('cascade')

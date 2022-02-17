@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\TokenService;
 use App\Models\Token;
 use Illuminate\Http\Request;
 
@@ -24,8 +25,17 @@ class TokenController extends Controller
      */
     public function create(Request $request): \Illuminate\Http\JsonResponse
     {
-        $token = Token::create($request->all());
-        return response()->json($token, 201);
+
+        try {
+            $token = new Token();
+            $token->expiration_date = TokenService::getExpirationDate();
+            $token->fill($request->all());
+            $token->save();
+        } catch (\Exception $th) {
+            dd($th->getMessage());
+        }
+
+        return response()->json(['Message' => 'CREATED', 'token' => $token], 201);
     }
 
     /**
@@ -47,7 +57,11 @@ class TokenController extends Controller
      */
     public function showOneToken($id): \Illuminate\Http\JsonResponse
     {
-        return response()->json(Token::findOrFail($id));
+        try {
+            return response()->json(Token::findOrFail($id));
+        } catch (\Throwable $th) {
+            return response()->json(['Message' => 'Not found'], 404);
+        }
     }
 
     /**

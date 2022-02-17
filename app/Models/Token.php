@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Token extends Model
+class Token extends BaseModel
 {
     //
 
@@ -13,5 +13,10 @@ class Token extends Model
     public function getRouteKeyName()
     {
         return 'token_uuid';
+    }
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
