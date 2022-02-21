@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\AuthenticationService;
 use App\Http\Service\CredentialValidationService;
 use App\Models\Role;
 use App\Models\Token;
@@ -20,43 +21,27 @@ class AuthController extends Controller
     {
 
         try {
+        $result = AuthenticationService::signUp($request->all());
 
-            $data = $request->all();
-            $password_length = strlen($data['password']);
+        $status = $result['status'];
 
-            if ($password_length < 8 || $password_length > 128) {
-                return response()->json(["Message" => "Password should be between 8 and 128 characters long"], 400);
-            }
+        $message = $result['message'];
 
+        if($status === 201) {
 
-            $user_with_this_email = User::where('email', $data['email'])->first();
-            if ($user_with_this_email != null) {
-                return response()->json(["Message" => "User with this email already exists"], 400);
-            }
-
-
-            if (User::where('username', $data['username'], 1)->first() != null) {
-                return response()->json(["Message" => "User with this username already exists"], 400);
-            }
-            $userRoleId = Role::where('name', '=', 'user')->first()->id;
-
-            // $data['hashed_password'] = Hash::make($data['password']);
-            $data['role_id'] = $userRoleId;
-
-            $user = new User();
-            $user->hashed_password = $data['password'];
-            $user->fill($data);
-            $user->save();
-
-
-            return response()->json(['Message' => 'CREATED', "user" => $user], 201);
-        } catch (\Exception $exception) {
-
-
-            // return response()->json(["Message" => 'Something went wrong on the server side; check validity of sent data contact the administration for more details', 500]);
-            return response()->json(["Message" => $exception->getMessage(), 500]);
+            return response()->json(['Message'=> $message, 'user' => $result['user']], $status);
 
         }
+        else {
+
+           return response()->json(['Message' => $message], $status);
+        }
+    }
+        catch(Exception $exception) {
+        return response()->json(['m' => $exception->getMessage()]);
+        /* TODO: implement logging */
+        }
+
 
     }
 
