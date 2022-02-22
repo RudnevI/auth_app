@@ -8,6 +8,9 @@ use Exception;
 class TokenService {
 
     /* TODO: add generate token to controllers and factories */
+
+    public static $tokenPattern = '/[a-zA-z0-9]*\.[a-zA-z0-9]*\.[a-zA-z0-9]*/';
+
     public static function generateToken($header, $payload) {
 
         $result = '';
@@ -54,5 +57,9 @@ class TokenService {
             return response()->json(["Message"=>"Token is not valid"], 400);
         }
         return $next($request);
+    }
+
+    public static function doesTokenMatchThePattern($token) {
+        return preg_match(TokenService::$tokenPattern, $token);
     }
 }

@@ -8,6 +8,13 @@ use App\Models\User;
 
 
 class AuthenticationService {
+
+
+
+
+
+
+
     public static function signUp($data) {
 
         try {
@@ -26,6 +33,7 @@ class AuthenticationService {
                  400);
 
             }
+
 
 
             $uniqueParameters = ['email', 'username'];
@@ -49,7 +57,8 @@ class AuthenticationService {
 
 
             // $data['hashed_password'] = Hash::make($data['password']);
-            $data->role_id = $userRoleId;
+
+            $data['role_id'] = $userRoleId;
 
             $user = new User();
             $user->hashed_password = $data['password'];
@@ -64,8 +73,9 @@ class AuthenticationService {
             $user->save();
 
 
+       $response = array_merge(AuthenticationService::setMessageStatusPair('CREATED', 201), ["user" => $user]);
 
-            $response = array_merge(AuthenticationService::setMessageStatusPair('CREATED', 201), $user);
+       return $response;
 
         } catch (\Exception $exception) {
 
@@ -95,5 +105,5 @@ class AuthenticationService {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    
+
 }
