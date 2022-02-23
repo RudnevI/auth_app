@@ -77,6 +77,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('get-user-role-by-token', ['uses'=>'UserController@getUserRoleByToken']);
     $router->get('get-admin-page', ['middleware'=>'admin_verification', 'uses'=>'AuthController@getAdminPage']);
     $router->get('get-resource-requiring-authentication', ['middleware'=>'auth', 'uses'=>'AuthController@getResponseForAuthenticatedUsers']);
+    $router->post('add-user-info', ['uses' => 'UserInfoController@addUserInfo']);
 });
 
 

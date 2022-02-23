@@ -45,6 +45,8 @@ class AuthUnitTest extends TestCase
 
     public function testFailureOnUserWithEmailAlreadyExistent() {
         $response = AuthenticationService::signUp(['email' => 'test@test.com', 'username' => 'test', 'password' => '12345678']);
+        $this->assertEqualsIgnoringCase($response['message'], 'User with this email already exists');
+        $this->assertEqualsIgnoringCase($response['status'], 400);
 
     }
 }

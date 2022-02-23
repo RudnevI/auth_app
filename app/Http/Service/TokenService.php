@@ -62,4 +62,6 @@ class TokenService {
     public static function doesTokenMatchThePattern($token) {
         return preg_match(TokenService::$tokenPattern, $token);
     }
+
+
 }

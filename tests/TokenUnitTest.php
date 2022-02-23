@@ -18,10 +18,12 @@ class TokenUnitTest extends TestCase
     }
 
     public function testTokenSignatureValidityCheck() {
-
+        $expectedSignature = hash_hmac('sha256', 'test.test', env('JWT_SECRET'));
+        $actualSignature = explode('.',TokenService::generateToken('test', 'test'))[2];
+        $this->assertEquals($actualSignature, $expectedSignature);
     }
 
     public function testTokenGenerationPatternMatch() {
-        preg_match(TokenService::generateToken());
+        $this->assertTrue(preg_match(TokenService::$tokenPattern, TokenService::generateToken('test', 'test')) === 1);
     }
 }

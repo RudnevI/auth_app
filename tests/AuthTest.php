@@ -7,7 +7,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 
-class SignUpTest extends TestCase
+class AuthTest extends TestCase
 {
 
 
@@ -136,12 +136,15 @@ class SignUpTest extends TestCase
     public function testAuthenticatedAccess() {
         //$this->createRoles();
 
-        $this->json('POST', '/api/sign-up', $this->validUserObject);
+        $this->json('POST', '/api/sign-up', $this->validUserObject)->response->getContent();
+
         $res = $this->json('POST', '/api/auth', $this->validUserObject)->response->getContent();
+
         $token = json_decode($res)->token;
 
 
         $this->json('GET', '/api/get-resource-requiring-authentication', [], ['Authorization' => 'Bearer '.$token])->seeJson(['Message' => 'Access granted'])->assertResponseOk();
+
 
     }
 

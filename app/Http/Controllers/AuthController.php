@@ -108,16 +108,16 @@ class AuthController extends Controller
 
     }
 
-    public function testMiddleware(Request $request) {
+    public function testMiddleware() {
         return response()->json(["Message", "test"]);
     }
 
 
-    public function getResponseForAuthenticatedUsers(Request $request) {
+    public function getResponseForAuthenticatedUsers() {
         return response()->json(['Message' => 'Access granted']);
     }
 
-    public function getAdminPage(Request $request) {
+    public function getAdminPage() {
         return response()->json(["Message" => "Welcome to admin page"]);
     }
 
