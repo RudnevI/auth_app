@@ -78,6 +78,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('get-admin-page', ['middleware'=>'admin_verification', 'uses'=>'AuthController@getAdminPage']);
     $router->get('get-resource-requiring-authentication', ['middleware'=>'auth', 'uses'=>'AuthController@getResponseForAuthenticatedUsers']);
     $router->post('add-user-info', ['uses' => 'UserInfoController@addUserInfo']);
+    $router->get('get-all-user-infos', ['uses' => 'UserInfoController@getAllUserInfos']);
+    $router->get('get-user-info-by-email', ['uses' => 'UserInfoController@getUserInfoByEmail']);
 });
 
 
