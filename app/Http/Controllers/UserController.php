@@ -17,7 +17,7 @@ class UserController extends Controller
         return response()->json(User::with("role")->get());
         }
         catch(Exception $e) {
-            dd($e->getMessage());
+
         }
     }
 
@@ -34,7 +34,7 @@ class UserController extends Controller
         return response()->json(['Message' => 'CREATED', 'user' => $user], 201);
         }
         catch(Exception $e) {
-        dd($e->getMessage());
+
         }
     }
 
@@ -78,7 +78,7 @@ class UserController extends Controller
             return response()->json($user->toArray());
         }
         catch(Exception $e) {
-            return response()->json(["Message" => "User with this id is not found"], 404);
+            return response()->json(["Message" => "Not found"], 404);
         }
 
     }
@@ -120,10 +120,10 @@ class UserController extends Controller
         try {
             $userId = Token::where("access_token", '=', $bearerToken)->get()->firstOrFail()->user_id;
             $user = User::findOrFail($userId);
-            dd($user->role_id);
+
         }
         catch(Exception $e) {
-            dd($e->getMessage());
+
         }
     }
 

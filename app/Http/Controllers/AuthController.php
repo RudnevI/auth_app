@@ -95,7 +95,7 @@ class AuthController extends Controller
        $token->save();
        }
        catch(Exception $e) {
-           dd($e->getMessage());
+      
        }
 
 

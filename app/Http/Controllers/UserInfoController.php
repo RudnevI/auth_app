@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\CrudService;
+use App\Http\Service\UserInfoService;
 use App\Models\User;
 use App\Models\UserInfo;
 use Exception;
@@ -17,8 +19,12 @@ class UserInfoController extends Controller
      *
      * @return void
      */
+
+    private $crudService;
+
     public function __construct()
     {
+
 
     }
 
@@ -26,7 +32,7 @@ class UserInfoController extends Controller
 
 
         try {
-        $validatedData = $this->validate($request,[
+        $$data = $this->validate($request,[
             'full_name' => 'required',
             'email' => 'required',
             'bio' => 'max:1024',
@@ -34,7 +40,7 @@ class UserInfoController extends Controller
         ]);
     }
     catch(Exception $exception) {
-        dd($exception->getMessage());
+
     }
 
 
@@ -58,21 +64,21 @@ class UserInfoController extends Controller
 
 
         try{
-        if(UserInfo::where($user->email === $validatedData['email'] || UserInfo::where('full_name', '=', $validatedData['full_name'])->first() !== null )) {
+        if(UserInfo::where('full_name', '=', $validatedData['full_name'])->first() !== null ) {
            return response()->json(["Message" => "User info section with passed email or full name already exists"], 400);
         }
     }
     catch(Exception $exception) {
-        dd($exception->getMessage());
+
     }
-        dd("test");
+
         $userInfo->user_id = $user->id;
         try {
         $userInfo->save();
-        return response()->json(["Message" => "CREATED", 'user_info' => $userInfo], 200);
+        return response()->json(["Message" => "CREATED", 'user_info' => $userInfo], 201);
         } catch(Exception $exception) {
-            dd($exception->getMessage());
-            Log::error($exception->getMessage());
+
+
             return response()->json(["Message" => "Something went wrong"], 500);
         }
 
@@ -119,22 +125,40 @@ class UserInfoController extends Controller
             ]);
         }
         catch(Exception $exception) {
-            dd($exception->getMessage());
+
         }
 
 
+        try{
 
             $validatedData = $request->all();
 
-            $userInfo = UserInfo::where('email', $validatedData['email']);
+
+            $user = User::where('email', $validatedData['email'])->first();
+            if($user === null) {
+                 return response()->json(["Message" => "User with passed email does not exist"], 400);
+            }
+            $userInfo = UserInfo::where('user_id', $user->id)->first();
             if($userInfo === null) {
-                return response()->json(["Message" => "User section about user with passed email does not exist"], 400);
+                return response()->json(["Message" => "User section about user with passed email does not exist"], 404);
             }
 
+
+
             $userInfo->full_name = $validatedData['full_name'];
-            $userInfo->email = $validatedData['email'];
+
+
+
             $userInfo->bio = $validatedData['bio'];
+
             $userInfo->save();
+            return response()->json(["Message" => "UPDATED"], 200);
+        }
+        catch(Exception $exception) {
+
+
+
+        }
 
 
 
@@ -168,6 +192,42 @@ class UserInfoController extends Controller
         }
 
         $userInfo->delete();
+    }
+
+    public function getUserInfoById($id) {
+        try {
+            return response()->json(UserInfo::findOrFail($id));
+        } catch (\Throwable $th) {
+            return response()->json(['Message' => 'Not found'], 404);
+        }
+    }
+
+    public function updateUserInfoById(Request $request,$id) {
+       if(UserInfo::where('id', $id)->first() === null) {
+           return response()->json(["Message" => "Not found"], 404);
+       }
+       $userInfo = new UserInfo();
+
+
+       $validator = Validator::make($request->all(), [
+
+        'full_name' => 'required',
+    ]);
+
+        if($validator->fails()) {
+            return response()->json(['validator' => $validator->errors()], 422);
+        }
+
+
+       $data = $request->all();
+       $userInfo->full_name = $data['full_name'];
+
+
+
+       $userInfo->bio = $data['bio'];
+
+       $userInfo->save();
+       return response()->json(["Message" => "UPDATED"], 200);
     }
 
 

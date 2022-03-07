@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\BanAppeal;
+use App\Models\Comment;
 use App\Models\Role;
 use App\Models\Token;
 use App\Models\User;
@@ -16,7 +18,7 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
 
-     private $modelRegistry = [User::class, Token::class, UserInfo::class];
+     private $modelRegistry = [User::class, Token::class, UserInfo::class, Comment::class, BanAppeal::class];
     public function run()
     {
         // $this->call('UsersTableSeeder');

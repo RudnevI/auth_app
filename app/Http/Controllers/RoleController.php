@@ -17,10 +17,11 @@ class RoleController extends Controller
     public function showAllRoles(): \Illuminate\Http\JsonResponse
     {
         try {
+
             return response()->json(Role::all());
         }
         catch(Exception $exception) {
-            dd($exception->getMessage());
+
         }
     }
 
@@ -85,7 +86,11 @@ class RoleController extends Controller
     }
 
     public function showOneRole($id): JsonResponse {
-        return response()->json(Role::findOrFail($id));
+
+        if(Role::where('id', $id)->first() === null) {
+            return response()->json(["Message" => "Not found"], 404);
+        }
+        return response()->json(Role::where('id', $id)->first());
     }
     /**
      * Remove the specified resource from storage.
@@ -95,7 +100,7 @@ class RoleController extends Controller
      */
     public function delete($id): \Illuminate\Http\Response
     {
-        Role::findOrFail($id)->delete();
+        Role::where('id', $id)->first()->delete();
         return response('Deleted Successfully', 200);
     }
 }

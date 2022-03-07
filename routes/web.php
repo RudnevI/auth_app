@@ -77,9 +77,36 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('get-user-role-by-token', ['uses'=>'UserController@getUserRoleByToken']);
     $router->get('get-admin-page', ['middleware'=>'admin_verification', 'uses'=>'AuthController@getAdminPage']);
     $router->get('get-resource-requiring-authentication', ['middleware'=>'auth', 'uses'=>'AuthController@getResponseForAuthenticatedUsers']);
-    $router->post('add-user-info', ['uses' => 'UserInfoController@addUserInfo']);
-    $router->get('get-all-user-infos', ['uses' => 'UserInfoController@getAllUserInfos']);
-    $router->get('get-user-info-by-email', ['uses' => 'UserInfoController@getUserInfoByEmail']);
+    $router->post('user-info', ['uses' => 'UserInfoController@addUserInfo']);
+    $router->get('user-info', ['uses' => 'UserInfoController@getAllUserInfos']);
+    $router->get('user-info-by-email', ['uses' => 'UserInfoController@getUserInfoByEmail']);
+    $router->get('user-info/{id}', ['uses' => 'UserInfoController@getUserInfoById']);
+    $router->put('user-info', ['uses' => 'UserInfoController@updateUserInfoByEmail']);
+    $router->put('user-info/{id}', ['uses' => 'UserInfoController@updateUserInfoById']);
+
+
+    $router->get('comments', ['uses' => 'CommentController@getAll']);
+
+    $router->get('comments/{id}', ['uses' => 'CommentController@getById']);
+
+    $router->post('comments', ['uses' => 'CommentController@create']);
+
+    $router->delete('comments/{id}', ['uses' => 'CommentController@deleteById']);
+
+    $router->put('comments/{id}', ['uses' => 'CommentController@updateById']);
+
+
+    $router->get('ban-appeals', ['uses' => 'BanAppealController@getAll']);
+
+    $router->get('ban-appeals/{id}', ['uses' => 'BanAppealController@getById']);
+
+    $router->post('ban-appeals', ['uses' => 'BanAppealController@create']);
+
+    $router->delete('ban-appeals/{id}', ['uses' => 'BanAppealController@deleteById']);
+
+    $router->put('ban-appeals/{id}', ['uses' => 'BanAppealController@updateById']);
+
+
 });
 
 

@@ -2,16 +2,15 @@
 
 namespace Database\Factories;
 
-
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
-use App\Models\BanAppeal;
 use App\Models\User;
 
-class BanAppealFactory extends Factory
+class CommentFactory extends Factory
 {
-    protected $model = BanAppeal::class;
+    protected $model = Comment::class;
 
 
 
@@ -20,7 +19,8 @@ class BanAppealFactory extends Factory
     {
     	return [
            'user_id' => User::all()->random()->id,
-           'ban_appeal_message' => $this->faker->text()
+           'title' => $this->faker->text(),
+           'body'  => $this->faker->text()
     	];
     }
 }
