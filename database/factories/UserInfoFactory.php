@@ -16,7 +16,7 @@ class UserInfoFactory extends Factory
     	    'full_name' => $this->faker->name(),
             'bio' => $this->faker->text(),
             'isBanned' => $this->faker->boolean(),
-            'user_id' => User::factory()
+            'user_id' => User::all()->random()->id
     	];
     }
 }

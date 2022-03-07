@@ -19,7 +19,7 @@ class TokenFactory extends Factory
             'access_token' => TokenService::generateToken(uniqid(), uniqid()),
             'refresh_token' => null,
             'expiration_date' => TokenService::getExpirationDate(),
-            'user_id'=>User::factory()
+            'user_id'=>User::all()->random()->id
     	];
     }
 }

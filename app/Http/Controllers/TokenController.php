@@ -32,7 +32,7 @@ class TokenController extends Controller
             $token->fill($request->all());
             $token->save();
         } catch (\Exception $th) {
-            dd($th->getMessage());
+
         }
 
         return response()->json(['Message' => 'CREATED', 'token' => $token], 201);

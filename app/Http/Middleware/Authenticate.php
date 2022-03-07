@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Service\TokenService;
 use Closure;
 use Exception;
 
@@ -16,6 +17,7 @@ class Authenticate
      * @return mixed
      */
     public function handle($request, Closure $next) {
+
         $bearerToken = $request->bearerToken();
 
         if(empty($bearerToken)) {
@@ -43,6 +45,5 @@ class Authenticate
             return response()->json(["Message"=>"Token is not valid"], 400);
         }
         return $next($request);
-
     }
 }

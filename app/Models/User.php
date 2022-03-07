@@ -15,11 +15,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends BaseModel
 {
 
-    protected $fillable = ['email', 'username', 'role_id'];
+    protected $fillable = ['email', 'username', 'role_id', 'id'];
 
     //
 
-    protected $hidden = ['hashed_password', 'id'];
+    protected $hidden = ['hashed_password'];
 
 
 

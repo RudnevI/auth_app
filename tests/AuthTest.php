@@ -7,7 +7,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 
-class SignUpTest extends TestCase
+class AuthTest extends TestCase
 {
 
 
@@ -83,7 +83,7 @@ class SignUpTest extends TestCase
 
     public function testSignUpFailureOnShortPassword() {
         //$this->createRoles();
-        $this->json('POST', '/api/sign-up', $this->getShortPasswordUserObject())->seeJson(["Message" => "Password should be between 8 and 128 characters long"])->assertResponseStatus(400);
+        $this->json('POST', '/api/sign-up', $this->getShortPasswordUserObject())->seeJson(["Message" => "Password should be at least ".env('MIN_PASSWORD_LENGTH').' characters long'])->assertResponseStatus(400);
     }
 
     public function testSignUpFailureOnEmailAlreadyExistent() {
@@ -110,8 +110,11 @@ class SignUpTest extends TestCase
 
     public function testAuthentication() {
         //$this->createRoles();
-        $this->json('POST', '/api/sign-up', $this->validUserObject);
+        $signUpRes = $this->json('POST', '/api/sign-up', $this->validUserObject);
+
+
         $res = $this->json('POST', '/api/auth', $this->validUserObject)->response->getContent();
+
         $token = json_decode($res)->token;
         $this->assertMatchesRegularExpression('/[A-Za-z0-9]*\.[A-Za-z0-9]*\.[A-Za-z0-9]*/', $token);
         $this->assertResponseOk();
@@ -133,12 +136,15 @@ class SignUpTest extends TestCase
     public function testAuthenticatedAccess() {
         //$this->createRoles();
 
-        $this->json('POST', '/api/sign-up', $this->validUserObject);
+        $this->json('POST', '/api/sign-up', $this->validUserObject)->response->getContent();
+
         $res = $this->json('POST', '/api/auth', $this->validUserObject)->response->getContent();
+
         $token = json_decode($res)->token;
 
 
         $this->json('GET', '/api/get-resource-requiring-authentication', [], ['Authorization' => 'Bearer '.$token])->seeJson(['Message' => 'Access granted'])->assertResponseOk();
+
 
     }
 
