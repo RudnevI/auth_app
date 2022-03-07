@@ -1,24 +1,33 @@
-# Lumen PHP Framework
+# Сервис аутентификации
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+Данный микросервис реализует механизм jwt-аутентификации, используемый алгоритм генерации токена - _SHA256_. Предполагается, что конечный пользователь имеет общее представление о механизме работы jwt-аутентификации.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+####Эндпоинты аутентификации
 
-## Official Documentation
+| URI                    | Ожидаемые данные                                 | Возвращаемые данные                                       | Описание                                        | Тип запроса |
+| ---------------------- | ------------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------- | ----------- |
+| `api/sign-up`          | email, password в формате JSON                   | созданная сущность в формате JSON с сообщением с создании | Создание пользователя с записью в базу данных   | `POST`      |
+| `api/auth`             | email, password в формате JSON                   | сгенерированный токен в формате JSON                      | Создание связянного с пользователем JWT-токена  | `POST`      |
+| `api/dig-for-treasure` | токен в в заголовке запроса Authorization Bearer | Сокровище                                                 | Эндпоинт для проверки работы jwt-аутентификации | `GET`       |
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+####Дополнительные эндпоинты
 
-## Contributing
+В микросервисе используется ряд дополнительных моделей для возможной реализации ресурсов по типу блога или форума.
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| URI                  | Ожидаемые данные          | Возвращаемые данные                                                       | Описание                                                                   | Тип запроса |
+| -------------------- | ------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------- |
+| `api/user-info`      | email, full_name, bio[^1] | Созданная сущность в формате JSON с сообщением о создании                 | Создание модели с дополнительной информацией о пользователе с записью в БД | `POST`      |
+| `api/user-info`      | Не требуются              | Полный список сущностей данного типа                                      | Получение полного списка сущностей данного типа                            | `GET`       |
+| `api/user-info/{id}` | id в параметрах запроса   | Сущность, привязанная к данному id                                        | Получение сущности по id                                                   | `GET`       |
+| `api/user-info/{id}` | id в параметрах запроса   | Обновленная сущность, привязанная к данному id с сообщением об обновлении | Обновление сущности по id                                                  | `PUT`       |
+| `api/user-info/{id}` | id в параметрах запроса   | Обновленная сущность, привязанная к данному id с сообщением об обновлении | Обновление сущности по id                                                  | `DELETE`    |
 
-## Security Vulnerabilities
+[^1]: Параметр не является обязательным
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Работа с остальными сущностями реализивана аналогично и приведение полного списка эндпоинтов было излишним. По этой причине достаточным будет описание в общем виде (дается только эндпоинт получения полного списка каждой сущности);
 
-## License
-
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   `api/roles`
+-   `api/tokens`
+-   `api/users`
+-   `api/ban-appeals`
+-   `api/comments`
